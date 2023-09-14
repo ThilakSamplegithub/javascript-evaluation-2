@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dashboard.css">
+    <title>Document</title>
+</head>
+<body>
+   <h1>Dashboard</h1> 
+   <select class="sorting" name="" id="">
+    <option value="">sort</option>
+    <option value="asc">Asc</option>
+    <option value="desc">Desc</option>
+   </select>
+<select name="" id="" class="filtering">
+    <option value="">Filter</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+</select>
+   <div class="dogCard">
+</div>
+</body>
+</html>
+<script>
+    if(!JSON.parse(localStorage.getItem("token"))){
+         window.location.href=`http://127.0.0.1:54219/login.html`
+    }
+    const dogCard=document.querySelector(".dogCard")
+    let data
+    let defaultData
+    fetch(`https://fitrst-jsonmockserver.onrender.com/dogs`)
+    .then(res=>res.json())
+    .then(res=>{console.log(res);data=res;defaultData=[...res];console.log(data,"is data");displayData(data)})
+     const displayData=(data)=>{
+        dogCard.innerHTML=""
+        data.forEach(({name,age,place,gender})=>{
+            const card=`<div><h1>${name}</h1>
+    <img href="https://www.shutterstock.com/image-photo/red-toller-retriever-dog-jumping-100nw-1639110433.jpg" alt="error" />
+    <p>age:${age}</p>
+    <p>gender:${gender}</p>
+    <p>${place}</p></div>`
+            dogCard.insertAdjacentHTML("beforeend",card)
+        })
+     }
+     document.querySelector(".sorting").addEventListener("click",(e)=>{
+        console.log(e.target.value)
+        console.log(data,'inside sort')
+        if(e.target.value==="asc"){
+            data.sort((a,b)=>{
+               return a.age-b.age
+            })
+            displayData(data)
+        }else if(e.target.value==="desc"){
+            data.sort((a,b)=>b.age-a.age)
+            displayData(data)
+        }else{
+            displayData(defaultData)
+        }
+     })
+    document.querySelector(".filtering").addEventListener("click",(e)=>{
+        console.log(e.target.value)
+        if(e.target.value==="Male"){
+          const filteredData=data.filter(el=>el.gender==="Male")
+          displayData(filteredData)
+        }else if(e.target.value==="Female"){
+            const filteredData=data.filter(el=>el.gender==="Female")
+            displayData(filteredData)
+        }else{
+            displayData(defaultData)
+        }
+    })
+</script>

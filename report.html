@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table border target="0">
+        <thead>
+            <tr>
+                <td>Total-Dogs-attending</td>
+                <td>Number-of-female-dogs-attending</td>
+                <td>Number-of-male-dogs-attending</td>
+                <td>Average-age-group-of-dogs-attending</td>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+</body>
+</html>
+<script>
+    if(!JSON.parse(localStorage.getItem("token"))){
+         window.location.href=`http://127.0.0.1:54219/login.html`
+    }
+    const table=document.querySelector("table")
+      const tbody=table.querySelector("tbody")
+    let total=0
+    let femaleDogs=0,maleDogs=0,average=0
+   fetch(`https://fitrst-jsonmockserver.onrender.com/dogs`)
+   .then(res=>res.json())
+   .then(res=>{console.log(res);total=res.length;femaleDog(res);maleDog(res);averageAge(res);dispalyTable()})
+   function femaleDog(data){
+    const filteredFemale=data.filter(el=>el.gender==="Female")
+    femaleDogs=filteredFemale.length
+   }
+   function maleDog(data){
+    const filteredMale=data.filter(el=>el.gender==="Male")
+    maleDogs=filteredMale.length
+   }
+   function averageAge(data){
+    // let totalDogs=data.length
+    console.log(data,"inside average")
+     const totalAge=data.reduce((current,accumulator)=>current+Number(accumulator.age),0)
+     console.log(totalAge)
+average=totalAge/total
+   }
+  function dispalyTable(){
+    tbody.innerHTML=""
+   const row=`<tr>
+                <td>${total}</td>
+                <td>${femaleDogs}</td>
+                <td>${maleDogs}</td>
+                <td>${average}</td>
+            </tr>`
+            tbody.insertAdjacentHTML("afterbegin",row)
+  }
+</script>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <input type="email" class="credentials"   placeholder="enter email"/>
+        <input type="password" class="credentials" placeholder="enter password"/>
+        <input type="submit"  />
+    </form>
+</body>
+</html>
+<script>
+    const obj={
+        email:"",
+        password:""
+    }
+  const form=document.querySelector("form")
+  const input=form.querySelectorAll(".credentials")
+//   console.log(input.length)
+  const inputArr=Array.from(input)
+  inputArr.forEach((el,i)=>{
+   el.addEventListener("change",(e)=>{
+      if(i===0){
+        obj.email=e.target.value
+      }else{
+        obj.password=e.target.value
+      }
+   })
+  })
+  form.addEventListener("submit",(e)=>{
+    e.preventDefault()
+    const obj2={email:obj.email,password:obj.password}
+    fetch(`https://reqres.in/api/login`,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify(obj2)
+    }).then(res=>res.json())
+    .then(res=>{localStorage.setItem("token",JSON.stringify(res.token))
+window.location.href='http://127.0.0.1:54219/dashboard.html'
+})
+    .catch(err=>console.log(err.message))
+  })
+</script>

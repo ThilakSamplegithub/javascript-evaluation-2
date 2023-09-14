@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>User</h1>
+    <form >
+        <input type="text" class="giving_input" placeholder=" enter name of breed" required/>
+        <input type="number" class="giving_input" placeholder="enter age" required/>
+        <select name="" id="" placeholder="Enter gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <input class="giving_input" placeholder="enter place" type="text" required/>
+        <input type="submit"/>
+    </form>
+</body>
+</html>
+<script>
+    const form=document.querySelector("form")
+    const info={
+        name:"",
+        age:0,
+        place:"",
+        gender:"Male"
+    }
+   const select= form.querySelector("select")
+   console.log(select)
+   select.addEventListener("change",(e)=>{
+    console.log(e.target.value)
+     info.gender=e.target.value
+   })
+    const inputTags=form.querySelectorAll(".giving_input")
+    const inputs=Array.from(inputTags)
+    console.log(inputs)
+    inputs.forEach((el,i)=>{
+        el.addEventListener("change",(e)=>{
+            console.log(e.target,"index is",i)
+            if(i===0){
+                info.name=e.target.value
+            }else if(i===1){
+                info.age=e.target.value
+            }else if(i===2){
+                info.place=e.target.value
+            }
+            console.log(info.name,info.age,info.place)
+        })
+    })
+    form.addEventListener("submit",(e)=>{
+        const obj={
+            name:info.name,age:info.age,gender:info.gender,place:info.place
+        }
+        e.preventDefault()
+        fetch(`https://fitrst-jsonmockserver.onrender.com/dogs`,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(obj)
+        }).then(res=>console.log(res))
+    })
+</script>
